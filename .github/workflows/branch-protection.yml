@@ -1,0 +1,35 @@
+name: Branch Protection
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  protect-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure Branch Protection
+        uses: SvanBoxel/branch-protection@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: main
+          protection: |
+            {
+              "required_status_checks": null,
+              "enforce_admins": true,
+              "required_pull_request_reviews": {
+                "dismissal_restrictions": {},
+                "dismiss_stale_reviews": true,
+                "require_code_owner_reviews": false,
+                "required_approving_review_count": 1
+              },
+              "restrictions": null
+            }
